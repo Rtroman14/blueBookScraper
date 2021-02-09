@@ -68,9 +68,9 @@ class Repo {
         await this.writeAll(filteredRecords);
     }
 
-    async update(id, attributes) {
+    async update(url, attributes) {
         const records = await this.getAll();
-        const record = records.find((record) => record.id === id);
+        const record = records.find((record) => record.url === url);
 
         if (!record) {
             throw new Error(`Record with id: ${id} not found.`);
