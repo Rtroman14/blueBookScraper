@@ -1,4 +1,5 @@
 const fs = require("fs");
+const crypto = require("crypto");
 
 class CompanyRepo {
     constructor(filename) {
@@ -46,6 +47,8 @@ class CompanyRepo {
     async create(attributes) {
         // attributes === { email: "", password: "" }
 
+        attributes.id = this.randomId();
+
         const records = await this.getAll();
         const record = { ...attributes };
 
@@ -68,9 +71,9 @@ class CompanyRepo {
         await this.writeAll(filteredRecords);
     }
 
-    async update(url, attributes) {
+    async update(id, attributes) {
         const records = await this.getAll();
-        const record = records.find((record) => record.url === url);
+        const record = records.find((record) => record.id === id);
 
         if (!record) {
             throw new Error(`Record with id: ${id} not found.`);
@@ -78,6 +81,10 @@ class CompanyRepo {
 
         Object.assign(record, attributes);
         await this.writeAll(records);
+    }
+
+    randomId() {
+        return crypto.randomBytes(4).toString("hex");
     }
 }
 

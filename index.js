@@ -4,13 +4,12 @@ const scrapeCompanyUrls = require("./src/scrapeCompanyUrls");
 const ContactRepo = require("./src/ContactRepo");
 const CompanyRepo = require("./src/CompanyRepo");
 
-// const contactData = require("./contacts.json");
 const companyData = require("./companies.json");
 
 (async () => {
     try {
         const browser = await puppeteer.launch({
-            headless: true,
+            headless: false,
         });
 
         const page = await browser.newPage();
@@ -24,8 +23,8 @@ const companyData = require("./companies.json");
 
         // await getCompanyUrls(
         //     page,
-        //     48,
-        //     "https://www.thebluebook.com/search.html?region=12&searchsrc=thebluebook&class=3580&searchTerm=roofing"
+        //     23,
+        //     "https://www.thebluebook.com/search.html?region=24&searchsrc=thebluebook&class=3580&searchTerm=roofing"
         // );
 
         await ripContacts(page, browser);
@@ -75,24 +74,24 @@ const ripContacts = async (page, browser) => {
                         jobTitle: contact.jobTitle,
                     });
                 }
-                await CompanyRepo.update(company.url, { scraped: true });
+                await CompanyRepo.update(company.id, { scraped: true });
             } else if (await page.$("#rc-anchor-container")) {
-                await page.waitFor(29000);
+                // await page.waitFor(29000);
                 await browser.close();
                 throw new Error("reCAPTCHA !!!");
             } else if (await page.$(".rc-anchor-container")) {
-                await page.waitFor(29000);
+                // await page.waitFor(29000);
                 await browser.close();
                 throw new Error("reCAPTCHA !!!");
             } else if (await page.$(".g-recaptcha")) {
                 // await page.waitFor(29000);
                 // await browser.close();
                 // throw new Error("reCAPTCHA !!!");
-                await CompanyRepo.update(company.url, { scraped: true });
-                console.log(company.url);
+                await CompanyRepo.update(company.id, { scraped: true });
+                console.log("Company ID =", company.id);
             } else {
-                await CompanyRepo.update(company.url, { scraped: true });
-                console.log(company.url);
+                await CompanyRepo.update(company.id, { scraped: true });
+                console.log("Company ID =", company.id);
             }
         }
     }

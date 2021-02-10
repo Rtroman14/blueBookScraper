@@ -1,7 +1,6 @@
 const fs = require("fs");
-const crypto = require("crypto");
 
-class ContactRepo {
+class Repo {
     constructor(filename) {
         if (!filename) {
             throw new Error("Creating a repository requires a filename");
@@ -47,8 +46,6 @@ class ContactRepo {
     async create(attributes) {
         // attributes === { email: "", password: "" }
 
-        attributes.id = this.randomId();
-
         const records = await this.getAll();
         const record = { ...attributes };
 
@@ -82,10 +79,6 @@ class ContactRepo {
         Object.assign(record, attributes);
         await this.writeAll(records);
     }
-
-    randomId() {
-        return crypto.randomBytes(4).toString("hex");
-    }
 }
 
-module.exports = new ContactRepo("contacts.json");
+module.exports = new Repo("repo.json");
