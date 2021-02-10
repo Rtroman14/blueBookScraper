@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-class Repo {
+class CompanyRepo {
     constructor(filename) {
         if (!filename) {
             throw new Error("Creating a repository requires a filename");
@@ -81,4 +81,4 @@ class Repo {
     }
 }
 
-module.exports = new Repo("repo.json");
+module.exports = new CompanyRepo("companies.json");

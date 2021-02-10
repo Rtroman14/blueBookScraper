@@ -1,5 +1,3 @@
-// const { getHref, getInnerText } = require("./helpers");
-
 module.exports = async (page) => {
     try {
         const scrapedCompanyUrls = await page.evaluate(() => {
