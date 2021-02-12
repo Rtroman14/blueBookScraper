@@ -23,8 +23,8 @@ const companyData = require("./companies.json");
 
         // await getCompanyUrls(
         //     page,
-        //     19,
-        //     "https://www.thebluebook.com/search.html?region=30&searchsrc=thebluebook&class=3580&searchTerm=roofing"
+        //     16,
+        //     "https://www.thebluebook.com/search.html?region=33&searchsrc=thebluebook&class=3580&searchTerm=roofing"
         // );
 
         await ripContacts(page, browser);
@@ -52,7 +52,12 @@ const getCompanyUrls = async (page, numPages, url) => {
 };
 
 const ripContacts = async (page, browser) => {
+    let count = 0;
+
     for (let company of companyData) {
+        if (count === 3) {
+            throw new Error("reCAPTCHA !!!");
+        }
         if (!("scraped" in company)) {
             await page.goto(company.url, {
                 waitUntil: "networkidle2",
@@ -75,23 +80,21 @@ const ripContacts = async (page, browser) => {
                     });
                 }
                 await CompanyRepo.update(company.id, { scraped: true });
+                count = 0;
             } else if (await page.$("#rc-anchor-container")) {
-                // await page.waitFor(29000);
                 await browser.close();
                 throw new Error("reCAPTCHA !!!");
             } else if (await page.$(".rc-anchor-container")) {
-                // await page.waitFor(29000);
                 await browser.close();
                 throw new Error("reCAPTCHA !!!");
             } else if (await page.$(".g-recaptcha")) {
-                // await page.waitFor(29000);
-                // await browser.close();
-                // throw new Error("reCAPTCHA !!!");
                 await CompanyRepo.update(company.id, { scraped: true });
                 console.log("Company ID =", company.id);
+                count++;
             } else {
                 await CompanyRepo.update(company.id, { scraped: true });
                 console.log("Company ID =", company.id);
+                count++;
             }
         }
     }
