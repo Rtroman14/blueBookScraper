@@ -9,7 +9,7 @@ const companyData = require("./companies.json");
 (async () => {
     try {
         const browser = await puppeteer.launch({
-            headless: false,
+            headless: true,
         });
 
         const page = await browser.newPage();
@@ -23,8 +23,8 @@ const companyData = require("./companies.json");
 
         // await getCompanyUrls(
         //     page,
-        //     23,
-        //     "https://www.thebluebook.com/search.html?region=24&searchsrc=thebluebook&class=3580&searchTerm=roofing"
+        //     19,
+        //     "https://www.thebluebook.com/search.html?region=30&searchsrc=thebluebook&class=3580&searchTerm=roofing"
         // );
 
         await ripContacts(page, browser);
