@@ -20,12 +20,6 @@ class ContactRepo {
         return JSON.parse(await fs.promises.readFile(this.filename));
     }
 
-    async getUser(id) {
-        const records = await this.getAll();
-
-        return records.find((record) => record.id === id);
-    }
-
     async getUserBy(filters) {
         const records = await this.getAll();
 
@@ -46,8 +40,6 @@ class ContactRepo {
 
     async create(attributes) {
         // attributes === { email: "", password: "" }
-
-        attributes.id = this.randomId();
 
         const records = await this.getAll();
         const record = { ...attributes };
@@ -81,10 +73,6 @@ class ContactRepo {
 
         Object.assign(record, attributes);
         await this.writeAll(records);
-    }
-
-    randomId() {
-        return crypto.randomBytes(4).toString("hex");
     }
 }
 

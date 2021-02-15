@@ -23,11 +23,11 @@ const companyData = require("./companies.json");
 
         // await getCompanyUrls(
         //     page,
-        //     16,
-        //     "https://www.thebluebook.com/search.html?region=33&searchsrc=thebluebook&class=3580&searchTerm=roofing"
+        //     22,
+        //     "https://www.thebluebook.com/search.html?region=11&searchsrc=thebluebook&class=3580&searchTerm=roofing"
         // );
 
-        await ripContacts(page, browser);
+        await ripContacts(page, browser, "Georgia");
     } catch (error) {
         console.log("ERROR SCRAPING ---", error);
     }
@@ -51,7 +51,7 @@ const getCompanyUrls = async (page, numPages, url) => {
     }
 };
 
-const ripContacts = async (page, browser) => {
+const ripContacts = async (page, browser, location) => {
     let count = 0;
 
     for (let company of companyData) {
@@ -77,6 +77,7 @@ const ripContacts = async (page, browser) => {
                         name: contact.name,
                         phone: contact.phone,
                         jobTitle: contact.jobTitle,
+                        location,
                     });
                 }
                 await CompanyRepo.update(company.id, { scraped: true });
@@ -88,10 +89,14 @@ const ripContacts = async (page, browser) => {
                 await browser.close();
                 throw new Error("reCAPTCHA !!!");
             } else if (await page.$(".g-recaptcha")) {
+                // await page.waitFor(29000);
+
                 await CompanyRepo.update(company.id, { scraped: true });
                 console.log("Company ID =", company.id);
                 count++;
             } else {
+                // await page.waitFor(29000);
+
                 await CompanyRepo.update(company.id, { scraped: true });
                 console.log("Company ID =", company.id);
                 count++;
